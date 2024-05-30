@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   runApp(const Riddles());
@@ -31,6 +31,9 @@ class RiddlesPage extends StatefulWidget {
 }
 
 class _RiddlesPageState extends State<RiddlesPage> {
+  int numRiddle = 0;
+  bool answer = false;
+  String buttonText = 'Reveal Answer';
   final riddles = [
     {
       'question':
@@ -49,10 +52,9 @@ class _RiddlesPageState extends State<RiddlesPage> {
       children: [
         Expanded(
           flex: 5,
-          child: FittedBox(
+          child: Image.network(
+            'https://www.looper.com/img/gallery/gollums-entire-backstory-explained/intro-1584137078.jpg',
             fit: BoxFit.fill,
-            child: Image.network(
-                'https://www.looper.com/img/gallery/gollums-entire-backstory-explained/intro-1584137078.jpg'),
           ),
         ),
         Expanded(
@@ -60,24 +62,37 @@ class _RiddlesPageState extends State<RiddlesPage> {
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Center(
-              child: Text('${riddles[0]['question']}'),
+              child: Text('${riddles[numRiddle]['question']}'),
             ),
           ),
         ),
         Expanded(
           flex: 2,
-          child: Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-              ),
-              onPressed: () {},
-              child: const Text(
-                'Reveal Answer',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                answer
+                    ? Text('${riddles[numRiddle]['answer']}')
+                    : const Text(''),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      answer = !answer;
+                      if (answer == false) {
+                        numRiddle = Random().nextInt(2);
+                      }
+                    });
+                  },
+                  child: !answer
+                      ? const Text('Reveal Answer',
+                          style: TextStyle(color: Colors.white))
+                      : const Text('Next',
+                          style: TextStyle(color: Colors.black)),
+                ),
+              ]),
         )
       ],
     );
